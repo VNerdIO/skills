@@ -1,0 +1,122 @@
+# ---------------------------------------------------------------
+# OS files
+# ---------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.DocumentRevisions-V100
+Icon?
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+*.lnk
+*.stackdump
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# OneDrive / cloud sync artifacts
+*-conflict-*
+.~lock.*
+~$*
+
+# ---------------------------------------------------------------
+# Editors / IDEs
+# ---------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+.history/
+
+# ---------------------------------------------------------------
+# Python (skill scripts)
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Node (in case a skill ships JS tooling)
+node_modules/
+npm-debug.log*
+
+# ---------------------------------------------------------------
+# Secrets and credentials
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+*.der
+id_rsa*
+id_ed25519*
+*.ppk
+.netrc
+.npmrc
+.pypirc
+credentials*
+!credentials*.example
+secrets*
+!secrets*.example
+*secret*.json
+*credentials*.json
+service-account*.json
+client_secret*.json
+token.json
+*.token
+.aws/
+.azure/
+.gcloud/
+.ssh/
+*.kdbx
+
+# Claude Code local-only settings
+.claude/settings.local.json
+
+# ---------------------------------------------------------------
+# Logs, temp, and build output
+# ---------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.orig
+tmp/
+dist/
+build/
+*.skill
+*.zip
