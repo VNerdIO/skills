@@ -157,12 +157,17 @@ def remember(a):
     faces = {f["face_id"]: f for f in load_json(wd / "faces" / "faces.json", {"faces": []})["faces"]}
     known = load_json(a.known, {}) or {}
     added = 0
+    key = lambda enc: tuple(round(x, 4) for x in enc)  # noqa: E731
+    for nm in known:  # also cleans duplicates left by earlier versions
+        known[nm] = list({key(e): e for e in known[nm]}.values())
     for rp in sorted((wd / "records").glob("*.json")):
         for person in load_json(rp).get("people", []):
             f = faces.get(person.get("face_id") or "")
             if f and person.get("name") and person.get("confidence") == "high":
-                known.setdefault(person["name"], []).append(f["encoding"])
-                added += 1
+                encs = known.setdefault(person["name"], [])
+                if key(f["encoding"]) not in {key(e) for e in encs}:  # re-runs must not duplicate
+                    encs.append(f["encoding"])
+                    added += 1
     for nm in known:  # cap per person so the library stays small and fast
         known[nm] = known[nm][-40:]
     save_json(a.known, known)

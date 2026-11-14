@@ -147,14 +147,15 @@ def main():
     if not manifest:
         sys.exit("Run inventory.py first.")
 
+    # The report always covers every record, so --only rewrites just those files
+    # without shrinking the report to the selected photos.
     jobs, report, missing = [], [], []
     for p in manifest["photos"]:
-        if a.only and p["id"] not in a.only:
-            continue
         rec = load_json(wd / "records" / f"{p['id']}.json")
         if rec is None:
             missing.append(p["id"])
             continue
+        selected = not a.only or p["id"] in a.only
         dest_dir = out / p["rel_dir"]
         rec["_dims"] = (p.get("width"), p.get("height"))
         rec["_front_name"] = Path(p["front"]).name
@@ -162,7 +163,7 @@ def main():
         targets = [(p["front"], True)]
         if p.get("original"):
             targets.append((p["original"], True))
-        if p.get("back"):
+        if p.get("back") and selected:
             # The transcription lives on the front, so the back is only copied when the record
             # asks for it (e.g. writing that still needs a second look). Clear stale copies.
             back_dest = dest_dir / Path(p["back"]).name
@@ -170,7 +171,7 @@ def main():
                 targets.append((p["back"], False))
             elif back_dest.exists() and not a.dry_run:
                 back_dest.unlink()
-        for src, is_front in targets:
+        for src, is_front in (targets if selected else []):
             dest = dest_dir / Path(src).name
             tags = build_tags(rec, front=is_front)
             if src == p.get("original"):
