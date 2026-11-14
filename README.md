@@ -10,6 +10,7 @@ to any one project.
 | Skill | What it does |
 | --- | --- |
 | [`shoebox`](shoebox/) | Turns Epson FastFoto scans of old family photos into a labeled library. Transcribes handwriting from photo backs, writes EXIF/XMP dates, places and captions, fixes orientation, and tags people using face clustering and optional GEDCOM family trees. |
+| [`grocery-list`](grocery-list/) | Sorts a grocery list by aisle in walking order for Publix or Food City, notes this week's weekly-ad specials next to matching items, and pushes the list into Apple Reminders. |
 | [`zscaler-troubleshooter`](zscaler-troubleshooter/) | Diagnoses Zscaler problems (ZPA private app access, ZIA web/SSL blocks, Client Connector tunnel and auth issues) with read-only API and endpoint checks, then names the likely cause and the fix. |
 
 ## Layout
@@ -34,6 +35,7 @@ Link (or copy) a skill folder into your personal skills directory:
 
 ```bash
 mkdir -p ~/.claude/skills
+ln -s "$PWD/grocery-list" ~/.claude/skills/grocery-list
 ln -s "$PWD/shoebox" ~/.claude/skills/shoebox
 ln -s "$PWD/zscaler-troubleshooter" ~/.claude/skills/zscaler-troubleshooter
 ```
@@ -56,6 +58,9 @@ zip -r shoebox.zip shoebox
 
 Each skill lists its own setup in its `SKILL.md`. In short:
 
+- **grocery-list**: macOS with Python 3 (standard library only). Specials come from
+  Flipp's weekly-ad search, so no account or API key is needed. Pushing to Reminders needs
+  the one-time macOS Automation permission.
 - **shoebox**: macOS or Linux with `exiftool` (`brew install exiftool`) and Python 3.11–3.13
   (`uv` recommended). `scripts/setup.sh` creates a virtualenv at
   `~/.local/share/shoebox/venv`. Face matching uses `face_recognition` (dlib), which is
