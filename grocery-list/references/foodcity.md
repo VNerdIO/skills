@@ -8,7 +8,7 @@ prices in the weekly ad require the ValuCard ("With Card").
 ## My store
 
 <!-- Fill in once the user confirms. Until then use the generic order below. -->
-- Location: _unknown_ (ZIP: 37416)
+- Location: Hwy 58, Chattanooga TN (ZIP: 37416)
 - Corrections: _none yet_
 
 ## Generic walking order

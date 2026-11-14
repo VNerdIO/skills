@@ -52,6 +52,9 @@ Field rules:
   breaks (`\n`). Mark unreadable words as `[illegible]` and best guesses as `[Jean?]`. Leave
   printed lab marks out unless they carry information; mention them in `transcription_notes`.
   Use `""` when the back is blank.
+- `keep_back` (optional, default false): copy the `_b` scan into the output too. Backs are
+  otherwise left out, since the transcription is on the front. Use it when `[illegible]`
+  words or an uncertain reading mean a person should still see the back.
 - `date.value`: partial ISO date: `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. Precision `decade` uses the
   middle year (`1975`) with `circa_years: 5`. Precision `season` uses the middle month of the
   season. Never omit `basis`, because a later reader needs to know where a date came from.
@@ -69,7 +72,7 @@ Field rules:
 
 ## Tags written
 
-| Record | Front (`_a` + unsuffixed original) | Back (`_b`) |
+| Record | Front (`_a` + unsuffixed original) | Back (`_b`, only with `keep_back`) |
 |---|---|---|
 | rotate_cw | `EXIF:Orientation` (0→1, 90→6, 180→3, 270→8) | not changed |
 | transcription | `EXIF:ImageDescription`, `XMP-dc:Description`, `IPTC:Caption-Abstract` | `XMP-dc:Description` "Back of X. Reads: …" |

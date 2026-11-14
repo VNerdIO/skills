@@ -3,8 +3,9 @@
 
 Usage: write_metadata.py OUT_DIR [--dry-run] [--only ID ...]
 
-Originals are never modified: front, back and unsuffixed original are copied into
-OUT_DIR/<rel_dir>/ first, then tagged. Also writes OUT_DIR/shoebox_report.{csv,md}.
+Originals are never modified: front and unsuffixed original are copied into
+OUT_DIR/<rel_dir>/ first, then tagged. Backs are left out (their writing is transcribed onto
+the front) unless the record sets "keep_back": true; stale back copies are removed. Also writes OUT_DIR/shoebox_report.{csv,md}.
 See references/metadata.md for the record schema and the tag mapping.
 """
 import argparse
@@ -86,6 +87,9 @@ def build_tags(rec, front=True):
     if front:
         rot = int(rec.get("rotate_cw", 0)) % 360
         t["EXIF:Orientation#"] = ROTATE_CW_TO_ORIENTATION[rot]
+        # FastFoto leaves a stale XMP-tiff:Orientation that XMP-first apps (Lightroom, digiKam) honor
+        # over EXIF, so keep the two in agreement.
+        t["XMP-tiff:Orientation#"] = ROTATE_CW_TO_ORIENTATION[rot]
         people = [p for p in rec.get("people", []) if p.get("name") and p.get("confidence") in TAGGED_CONF]
         names = list(dict.fromkeys(p["name"] for p in people))
         if names:
@@ -118,7 +122,7 @@ def build_tags(rec, front=True):
         elif rec.get("caption"):
             t["XMP-dc:Title"] = rec["caption"]
         if rec.get("_back_name"):
-            notes.append(f"Back scan: {rec['_back_name']}")
+            notes.append(f"Back scan: {rec['_back_name']}" + ("" if rec.get("keep_back") else " (source folder)"))
     else:
         t["XMP-dc:Description"] = f"Back of {rec.get('_front_name', '')}" + (f". Reads: {text}" if text else "")
 
@@ -159,7 +163,13 @@ def main():
         if p.get("original"):
             targets.append((p["original"], True))
         if p.get("back"):
-            targets.append((p["back"], False))
+            # The transcription lives on the front, so the back is only copied when the record
+            # asks for it (e.g. writing that still needs a second look). Clear stale copies.
+            back_dest = dest_dir / Path(p["back"]).name
+            if rec.get("keep_back"):
+                targets.append((p["back"], False))
+            elif back_dest.exists() and not a.dry_run:
+                back_dest.unlink()
         for src, is_front in targets:
             dest = dest_dir / Path(src).name
             tags = build_tags(rec, front=is_front)

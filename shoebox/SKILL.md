@@ -22,6 +22,9 @@ evidence from every photo, then links photos together, then writes the tags.
 - **Originals are never modified.** Everything is copied to an output folder and tagged
   there. The default output is `<source>-shoebox` next to the source folder. Ask before
   writing anywhere else.
+- **Backs stay out of the output.** Once a back's writing is transcribed onto the front, the
+  `_b` scan is not copied (it remains in the source folder). Set `"keep_back": true` in a
+  record only when the back still needs a human look, e.g. illegible words.
 - The working state lives in `OUT/.shoebox/`: the manifest, previews, face data, contact
   sheets and one record per photo. Records persist, so a big batch can be resumed, and an
   answer can be corrected and the photo rewritten without starting over.
@@ -122,7 +125,7 @@ Read `references/dating-clues.md`, then for each photo without a written date:
 
 ```bash
 $PY scripts/write_metadata.py OUT --dry-run --only <id>   # spot-check one photo's tags
-$PY scripts/write_metadata.py OUT                          # copy + tag everything
+$PY scripts/write_metadata.py OUT                          # copy + tag fronts (backs only if keep_back)
 $PY scripts/faces.py remember OUT                          # learn high-confidence faces
 ```
 
