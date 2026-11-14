@@ -10,6 +10,7 @@ to any one project.
 | Skill | What it does |
 | --- | --- |
 | [`shoebox`](shoebox/) | Turns Epson FastFoto scans of old family photos into a labeled library. Transcribes handwriting from photo backs, writes EXIF/XMP dates, places and captions, fixes orientation, and tags people using face clustering and optional GEDCOM family trees. |
+| [`family-tree`](family-tree/) | Builds a four-generation family tree as a GEDCOM 5.5.1 file plus an offline, single-page pedigree chart. Reads existing GEDCOM files, or interviews you and researches deceased ancestors in WikiTree, obituaries and Find a Grave, citing every fact. |
 | [`grocery-list`](grocery-list/) | Sorts a grocery list by aisle in walking order for Publix or Food City, notes this week's weekly-ad specials next to matching items, and pushes the list into Apple Reminders. |
 | [`zscaler-troubleshooter`](zscaler-troubleshooter/) | Diagnoses Zscaler problems (ZPA private app access, ZIA web/SSL blocks, Client Connector tunnel and auth issues) with read-only API and endpoint checks, then names the likely cause and the fix. |
 
@@ -35,6 +36,7 @@ Link (or copy) a skill folder into your personal skills directory:
 
 ```bash
 mkdir -p ~/.claude/skills
+ln -s "$PWD/family-tree" ~/.claude/skills/family-tree
 ln -s "$PWD/grocery-list" ~/.claude/skills/grocery-list
 ln -s "$PWD/shoebox" ~/.claude/skills/shoebox
 ln -s "$PWD/zscaler-troubleshooter" ~/.claude/skills/zscaler-troubleshooter
@@ -58,6 +60,9 @@ zip -r shoebox.zip shoebox
 
 Each skill lists its own setup in its `SKILL.md`. In short:
 
+- **family-tree**: Python 3 (standard library only). Research uses WikiTree's public API
+  and public web pages, with no account or API key. Living people are never searched
+  online.
 - **grocery-list**: macOS with Python 3 (standard library only). Specials come from
   Flipp's weekly-ad search, so no account or API key is needed. Pushing to Reminders needs
   the one-time macOS Automation permission.

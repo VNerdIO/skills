@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root {
+  --bg: #f6f3ee; --surface: #fffdf9; --ink: #2a2620; --muted: #6e665b; --line: #c9bfb0;
+  --accent: #7a4b2a; --male: #3d6a8a; --female: #8a3d5c; --unknown: #9a9183;
+  --warn: #9a6a00; --shadow: 0 1px 2px rgb(0 0 0 / .06), 0 2px 8px rgb(0 0 0 / .05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1916; --surface: #25221e; --ink: #ece6dc; --muted: #a59c8f; --line: #4a443c;
+    --accent: #d9a273; --male: #7fb0d4; --female: #d48aa8; --unknown: #7d756a;
+    --warn: #e0b04a; --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1916; --surface: #25221e; --ink: #ece6dc; --muted: #a59c8f; --line: #4a443c;
+  --accent: #d9a273; --male: #7fb0d4; --female: #d48aa8; --unknown: #7d756a;
+  --warn: #e0b04a; --shadow: none;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.45 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+}
+header { padding: 28px 16px 8px; max-width: 1180px; margin: 0 auto; display: flex;
+  flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+h1 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -.01em; }
+.sub { margin: 4px 0 0; color: var(--muted); font-style: italic; }
+.tools { display: flex; gap: 8px; flex-wrap: wrap; }
+button, .btn {
+  font: 13px/1 system-ui, -apple-system, sans-serif; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; cursor: pointer; text-decoration: none;
+}
+button:hover, .btn:hover { border-color: var(--accent); }
+button:focus-visible, .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 8px 16px 32px; overflow-x: auto; }
+.chart { position: relative; display: grid; min-width: 860px;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(74px, auto));
+  column-gap: 44px; row-gap: 8px; }
+.gen-label { font: 600 11px/1 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); padding: 0 2px 8px; }
+.labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 44px; min-width: 860px; }
+svg.links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+svg.links path { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.slot { display: flex; align-items: center; position: relative; z-index: 1; }
+.card {
+  width: 100%; text-align: left; background: var(--surface); border: 1px solid var(--line);
+  border-left: 4px solid var(--unknown); border-radius: 6px; padding: 8px 10px; box-shadow: var(--shadow);
+  cursor: pointer; font: inherit; color: inherit;
+}
+.card.M { border-left-color: var(--male); }
+.card.F { border-left-color: var(--female); }
+.card .name { font-weight: 600; font-size: 15px; line-height: 1.25; }
+.card .meta { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.card .place { color: var(--muted); font-size: 12px; margin-top: 1px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; }
+.card.empty { border-style: dashed; border-left-width: 1px; background: transparent; box-shadow: none;
+  color: var(--muted); cursor: default; font-style: italic; }
+.card.subject { border-width: 2px; border-left-width: 4px; }
+.conf { font: 600 10px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--warn); border: 1px solid currentColor; border-radius: 3px; padding: 2px 4px;
+  margin-left: 6px; vertical-align: 2px; }
+.card.low { border-style: dotted; }
+dialog { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink);
+  width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0; box-shadow: 0 10px 40px rgb(0 0 0 / .25); }
+dialog::backdrop { background: rgb(0 0 0 / .35); }
+.dlg-head { display: flex; justify-content: space-between; align-items: start; gap: 12px;
+  padding: 18px 20px 6px; }
+.dlg-head h2 { margin: 0; font-size: 22px; }
+.dlg-body { padding: 6px 20px 20px; }
+.rel { color: var(--muted); font-style: italic; margin: 0 0 12px; }
+dl { display: grid; grid-template-columns: 90px 1fr; gap: 6px 12px; margin: 0 0 14px; }
+dt { color: var(--muted); font: 12px/1.8 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .05em; }
+dd { margin: 0; }
+h3 { font: 600 12px/1 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--muted); margin: 16px 0 8px; }
+ol.srcs { margin: 0; padding-left: 20px; font-size: 14px; }
+ol.srcs li { margin-bottom: 6px; }
+a { color: var(--accent); }
+.notes { white-space: pre-wrap; font-size: 14px; }
+.links-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+footer { max-width: 1180px; margin: 0 auto; padding: 0 16px 32px; color: var(--muted); font-size: 13px; }
+@media print {
+  @page { size: landscape; margin: 12mm; }
+  body { background: #fff; color: #000; font-size: 12px; }
+  .tools, dialog { display: none !important; }
+  .wrap { overflow: visible; padding: 0; }
+  .chart, .labels { min-width: 0; }
+  .card { box-shadow: none; break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+  </div>
+  <div class="tools">
+    <button type="button" id="theme" aria-label="Toggle light or dark theme">Theme</button>
+    <button type="button" id="print">Print</button>
+    <a class="btn" id="download" hidden>Download GEDCOM</a>
+  </div>
+</header>
+<main class="wrap">
+  <div class="labels">
+    <div class="gen-label">Subject</div><div class="gen-label">Parents</div>
+    <div class="gen-label">Grandparents</div><div class="gen-label">Great-grandparents</div>
+  </div>
+  <div class="chart" id="chart"><svg class="links" id="links" aria-hidden="true"></svg></div>
+</main>
+<footer id="foot"></footer>
+<dialog id="dlg" aria-labelledby="dlg-name">
+  <div class="dlg-head"><h2 id="dlg-name"></h2><button type="button" id="close" aria-label="Close">Close</button></div>
+  <div class="dlg-body" id="dlg-body"></div>
+</dialog>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const P = D.people, slots = D.slots;
+  const MONTHS = {JAN:"Jan",FEB:"Feb",MAR:"Mar",APR:"Apr",MAY:"May",JUN:"Jun",JUL:"Jul",AUG:"Aug",SEP:"Sep",OCT:"Oct",NOV:"Nov",DEC:"Dec"};
+  const QUAL = {ABT:"about",CAL:"calculated",EST:"estimated",BEF:"before",AFT:"after",BET:"between",AND:"and",FROM:"from",TO:"to",INT:"interpreted"};
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+  const fullName = p => [p.given, p.surname].filter(Boolean).join(" ") || "Unknown";
+  const year = d => { const m = /\b(\d{4})\b/.exec(d || ""); return m ? m[1] : ""; };
+  const approx = d => /^(ABT|CAL|EST|BEF|AFT|BET)/.test(d || "") ? "c. " : "";
+  const fmtDate = d => (d || "").split(/\s+/).map(w => MONTHS[w] || QUAL[w] || w).join(" ");
+  const ev = (p, k) => p[k] || {};
+  const lifespan = p => {
+    if (p.living && !ev(p, "birth").date) return "Living";
+    const b = ev(p, "birth").date, d = ev(p, "death").date;
+    const by = b ? approx(b) + year(b) : "", dy = d ? approx(d) + year(d) : "";
+    if (!by && !dy) return p.death ? "Deceased" : "";
+    return p.living ? `b. ${by}` : `${by || "?"} – ${dy || (p.death ? "?" : "")}`;
+  };
+  const relation = n => {
+    if (n === 1) return "Subject of this chart";
+    const g = Math.floor(Math.log2(n));
+    const word = ["", "", "grand", "great-grand"][g] + (n % 2 ? "mother" : "father");
+    const line = g > 1 ? (n < 3 * 2 ** (g - 1) ? " (father's side)" : " (mother's side)") : "";
+    return word[0].toUpperCase() + word.slice(1) + line;
+  };
+
+  document.getElementById("title").textContent = D.title;
+  const subj = P[D.subject];
+  document.getElementById("subtitle").textContent = `Four generations of ${fullName(subj)}`;
+  document.title = D.title;
+  const filled = Object.keys(slots).length;
+  document.getElementById("foot").textContent =
+    `${filled} of 15 ancestors known · ${Object.keys(D.sources).length} sources · generated ${D.generated} · click a person for details`;
+
+  const chart = document.getElementById("chart");
+  for (let n = 1; n < 16; n++) {
+    const g = Math.floor(Math.log2(n)), i = n - 2 ** g, span = 8 / 2 ** g;
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.style.gridColumn = String(g + 1);
+    slot.style.gridRow = `${i * span + 1} / span ${span}`;
+    slot.dataset.n = n;
+    const pid = slots[n], p = pid && P[pid];
+    if (p) {
+      const conf = p.confidence && p.confidence !== "high" ? `<span class="conf">${esc(p.confidence)}</span>` : "";
+      const place = ev(p, "birth").place || ev(p, "death").place || "";
+      slot.innerHTML = `<button type="button" class="card ${esc(p.sex || "U")} ${n === 1 ? "subject" : ""} ${p.confidence === "low" ? "low" : ""}">
+        <div class="name">${esc(fullName(p))}${conf}</div>
+        <div class="meta">${esc(lifespan(p))}</div>
+        ${place ? `<div class="place" title="${esc(place)}">${esc(place)}</div>` : ""}</button>`;
+      slot.querySelector("button").addEventListener("click", () => show(n));
+    } else {
+      const child = P[slots[Math.floor(n / 2)]];
+      slot.innerHTML = `<div class="card empty">${child ? `Unknown ${n % 2 ? "mother" : "father"}` : "—"}</div>`;
+    }
+    chart.appendChild(slot);
+  }
+
+  const svg = document.getElementById("links");
+  function drawLinks() {
+    const box = chart.getBoundingClientRect();
+    const rect = n => chart.querySelector(`.slot[data-n="${n}"] .card`).getBoundingClientRect();
+    let d = "";
+    for (let n = 1; n < 8; n++) {
+      const c = rect(n), x0 = c.right - box.left, y0 = c.top + c.height / 2 - box.top;
+      for (const k of [2 * n, 2 * n + 1]) {
+        const r = rect(k), x1 = r.left - box.left, y1 = r.top + r.height / 2 - box.top, xm = (x0 + x1) / 2;
+        d += `M${x0},${y0}H${xm}V${y1}H${x1}`;
+      }
+    }
+    svg.innerHTML = `<path d="${d}"/>`;
+  }
+  drawLinks();
+  new ResizeObserver(drawLinks).observe(chart);
+
+  const dlg = document.getElementById("dlg");
+  const srcLine = c => {
+    const id = typeof c === "string" ? c : c.id, s = D.sources[id] || {title: id};
+    const t = s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title || s.url)}</a>` : esc(s.title);
+    const page = c.page ? `, ${esc(c.page)}` : "";
+    return `<li>${t}${page}${s.author ? ` — ${esc(s.author)}` : ""}${s.accessed ? ` <span style="color:var(--muted)">(accessed ${esc(fmtDate(s.accessed))})</span>` : ""}</li>`;
+  };
+  function show(n) {
+    const pid = slots[n], p = P[pid];
+    document.getElementById("dlg-name").textContent = fullName(p) + (p.nickname ? ` “${p.nickname}”` : "");
+    const rows = [];
+    for (const [k, label] of [["birth", "Born"], ["death", "Died"], ["burial", "Buried"]]) {
+      const e = p[k];
+      if (e && (e.date || e.place)) rows.push(`<dt>${label}</dt><dd>${esc(fmtDate(e.date))}${e.date && e.place ? "<br>" : ""}${esc(e.place)}</dd>`);
+    }
+    for (const m of D.marriages) {
+      if (m.husband === pid || m.wife === pid) {
+        const sp = P[m.husband === pid ? m.wife : m.husband];
+        rows.push(`<dt>Married</dt><dd>${esc(sp ? fullName(sp) : "")}${m.date ? `, ${esc(fmtDate(m.date))}` : ""}${m.place ? `<br>${esc(m.place)}` : ""}</dd>`);
+      }
+    }
+    if (p.living) rows.push(`<dt>Status</dt><dd>Living</dd>`);
+    if (p.confidence) rows.push(`<dt>Confidence</dt><dd>${esc(p.confidence)}${p.basis ? ` — ${esc(p.basis)}` : ""}</dd>`);
+    const cites = [...(p.sources || [])];
+    for (const k of ["birth", "death", "burial"]) for (const c of (p[k] || {}).sources || []) cites.push(c);
+    for (const m of D.marriages) if (m.husband === pid || m.wife === pid) cites.push(...(m.sources || []));
+    const byId = new Map();  // one line per source; keep the cite that names a page
+    for (const c of cites) {
+      const id = typeof c === "string" ? c : c.id, prev = byId.get(id);
+      if (!prev || (!prev.page && c.page)) byId.set(id, c);
+    }
+    const uniq = [...byId.values()];
+    const nav = [];
+    if (n > 1) nav.push(`<button type="button" data-go="${Math.floor(n / 2)}">← Child</button>`);
+    for (const k of [2 * n, 2 * n + 1]) if (k < 16 && slots[k]) nav.push(`<button type="button" data-go="${k}">${k % 2 ? "Mother" : "Father"} →</button>`);
+    document.getElementById("dlg-body").innerHTML = `
+      <p class="rel">${esc(relation(n))}</p>
+      ${rows.length ? `<dl>${rows.join("")}</dl>` : ""}
+      ${p.notes ? `<h3>Notes</h3><div class="notes">${esc(p.notes)}</div>` : ""}
+      <h3>Sources</h3>${uniq.length ? `<ol class="srcs">${uniq.map(srcLine).join("")}</ol>` : `<p class="notes">None cited${p.living ? " (living person; details from family)" : ""}.</p>`}
+      ${nav.length ? `<div class="links-row">${nav.join("")}</div>` : ""}`;
+    dlg.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => show(+b.dataset.go)));
+    if (!dlg.open) dlg.showModal();
+  }
+  document.getElementById("close").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+
+  document.getElementById("print").addEventListener("click", () => window.print());
+  const root = document.documentElement;
+  let theme = null;
+  try { theme = localStorage.getItem("ft-theme"); } catch (e) {}
+  if (theme) root.dataset.theme = theme;
+  document.getElementById("theme").addEventListener("click", () => {
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    try { localStorage.setItem("ft-theme", root.dataset.theme); } catch (e) {}
+  });
+  if (D.ged) {
+    const a = document.getElementById("download");
+    a.href = URL.createObjectURL(new Blob([D.ged], {type: "text/plain;charset=utf-8"}));
+    a.download = D.ged_name || "family.ged";
+    a.hidden = false;
+  }
+})();
+</script>
+</body>
+</html>
