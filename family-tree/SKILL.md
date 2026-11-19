@@ -1,6 +1,6 @@
 ---
 name: family-tree
-description: Build a four-generation family tree (a person, their parents, grandparents and great-grandparents) as a GEDCOM 5.5.1 file plus a single-page interactive pedigree chart. Reads an existing GEDCOM (5.5.1 or 7.0, including Ancestry and FamilySearch exports). With no GEDCOM, interviews the user and then researches deceased ancestors in WikiTree, obituaries, Find a Grave and other free public records, citing every fact. Use this whenever the user wants a family tree, pedigree or ancestor chart, asks who their great-grandparents were, wants to trace their ancestry or genealogy, or wants to view, clean up or convert a .ged file, even if they don't name the skill.
+description: Build a four-generation family tree (a person, their parents, grandparents and great-grandparents) as a GEDCOM 5.5.1 file plus a single-page interactive pedigree chart. Reads an existing GEDCOM (5.5.1 or 7.0, including Ancestry and FamilySearch exports). With no GEDCOM, interviews the user and then researches deceased ancestors in WikiTree, obituaries, Find a Grave, Library of Congress newspapers and other free public records (or sites the user is signed in to), citing every fact. Use this whenever the user wants a family tree, pedigree or ancestor chart, asks who their great-grandparents were, wants to trace their ancestry or genealogy, or wants to view, clean up or convert a .ged file, even if they don't name the skill.
 ---
 
 # Family tree
@@ -69,9 +69,13 @@ through a record that links them to someone already established:
 python3 scripts/wikitree.py search Harold Smith --birth 1931 --place Tennessee
 python3 scripts/wikitree.py ancestors Smith-12345 --depth 3
 python3 scripts/wikitree.py profile Smith-12345
+python3 scripts/loc.py search "Harold Smith" --state tennessee --from 1900 --to 1963   # old newspapers
 ```
 
-Use the web search and fetch tools for obituaries, Find a Grave and archives. Add each
+Use the web search and fetch tools for obituaries, Find a Grave and archives. For
+anyone who died before 1964, also search Chronicling America with `scripts/loc.py`.
+If the user says they're signed in to FamilySearch, Newspapers.com or Ancestry in
+Chrome, use those sites through the browser (see "Signed-in sites" in research.md). Add each
 accepted person and source to `tree.json` as you go, with `confidence` and `basis`.
 The step is done when every empty slot whose child is a `medium` or `high` person has
 been searched in WikiTree, an obituary search and Find a Grave. Record which sources
