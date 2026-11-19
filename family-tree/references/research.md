@@ -38,10 +38,12 @@ registers, county maps), not records; the records are in Chronicling America.
 
 ### Using Chronicling America
 
-- Search initials as well as full names (`"W. R. Dunlap"`, `"Mrs. J. T. Smith"`):
-  papers before about 1920 seldom printed women's or men's given names in full.
-  Married women appear under the husband's name.
-- Phrase search is exact, but OCR is not: a name broken across a line, or misread
+- Papers before about 1920 seldom printed given names in full, and married women appear
+  under the husband's name (`Mrs. J. T. Smith`). But the search index drops single
+  letters, so `"W. R. Dunlap"` searches for every Dunlap. For initials, narrow by
+  `--county` and a short date range and read the excerpts. `loc.py` matches the
+  initials in the OCR, so a hit with no excerpt is a different Dunlap.
+- Phrase search on full words is exact, but OCR is not: a name broken across a line, or misread
   (`Dzath of`), can hide a real hit. Try a surname plus the town, too.
 - Small-town "correspondent" columns (`Concord Items`) list visits, illnesses and
   deaths. They're often the only print record of a rural family.

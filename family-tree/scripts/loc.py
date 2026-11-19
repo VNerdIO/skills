@@ -82,8 +82,9 @@ def page_lines(page_url):
 
 
 def around(lines, needle, context):
-    """Line windows around each place the needle occurs (case- and spacing-insensitive)."""
-    pat = re.compile(r"\s+".join(map(re.escape, needle.split())), re.I)
+    """Line windows around each place the needle occurs, ignoring case and punctuation
+    (OCR often drops or doubles the periods in initials, as the search index does)."""
+    pat = re.compile(r"\W+".join(map(re.escape, re.findall(r"\w+", needle))), re.I)
     text = "\n".join(lines)
     out = []
     for m in pat.finditer(text):
