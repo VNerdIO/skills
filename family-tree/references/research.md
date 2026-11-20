@@ -98,6 +98,22 @@ returns an empty app shell) but open without a login in a Chrome tab.
   time: get the image URLs from the file unit's
   `digitalObjects`, download them with `curl`, and convert the TIFFs with `sips -s format jpeg`.
   Cite the file unit's `/id/<NAID>` page plus the image number.
+- The older men's 1942 registration (born 1877–1897) is a separate series, `Draft
+  Registration Cards of the Fourth Registration for <State>`. Most states have one, but
+  no Tennessee or South Carolina series exists (checked 2026-11). Kentucky's is fully online.
+- **National Archives microfilm that FamilySearch has indexed**: the index is faster
+  than paging through images, so search there when the user is signed in, adding
+  `&f.collectionId=` to the record-search URL.
+  - `1968530`, WWI draft cards (1917–18, men born 1872–1900). The index has the
+    birth date and place, so search by surname plus `q.birthLikePlace=<town>`.
+    Open the card image for address, employer, marital status, dependents and any
+    exemption claimed; one card here recorded a lost hand.
+  - `1877095`, 1890 schedule of Union veterans and widows. It gives company,
+    regiment, enlistment and discharge dates and post office. A widow is written above
+    her husband's line ("Williams, Nancy C., widow of"), so check the image for the
+    remarried name.
+
+  In the image viewer, close the side panels and zoom in, then read the card from a screenshot.
 - The 1950 census site has an open JSON search
   (`1950census.archives.gov/api/search?name=&state=&county=`), but its name matching is
   loose. FamilySearch's 1950 index is easier to use.
