@@ -1,6 +1,6 @@
 ---
 name: family-tree
-description: Build a four-generation family tree (a person, their parents, grandparents and great-grandparents) as a GEDCOM 5.5.1 file plus a single-page interactive pedigree chart. Reads an existing GEDCOM (5.5.1 or 7.0, including Ancestry and FamilySearch exports). With no GEDCOM, interviews the user and then researches deceased ancestors in WikiTree, obituaries, Find a Grave, Library of Congress newspapers and other free public records (or sites the user is signed in to), citing every fact. Use this whenever the user wants a family tree, pedigree or ancestor chart, asks who their great-grandparents were, wants to trace their ancestry or genealogy, or wants to view, clean up or convert a .ged file, even if they don't name the skill.
+description: Build a four-generation family tree (a person, their parents, grandparents and great-grandparents) as a GEDCOM 5.5.1 file plus a single-page interactive pedigree chart. Reads an existing GEDCOM (5.5.1 or 7.0, including Ancestry and FamilySearch exports). With no GEDCOM, interviews the user and then researches deceased ancestors in WikiTree, obituaries, Find a Grave, Library of Congress newspapers, National Archives military records and other free public records (or sites the user is signed in to), citing every fact. Use this whenever the user wants a family tree, pedigree or ancestor chart, asks who their great-grandparents were, wants to trace their ancestry or genealogy, or wants to view, clean up or convert a .ged file, even if they don't name the skill.
 ---
 
 # Family tree
@@ -74,6 +74,8 @@ python3 scripts/loc.py search "Harold Smith" --state tennessee --from 1900 --to 
 
 Use the web search and fetch tools for obituaries, Find a Grave and archives. For
 anyone who died before 1964, also search Chronicling America with `scripts/loc.py`.
+For men of military age in the Civil War or WWII, search the National Archives' service and
+enlistment records in Chrome (see "Using the National Archives" in research.md).
 If the user says they're signed in to FamilySearch, Newspapers.com or Ancestry in
 Chrome, use those sites through the browser (see "Signed-in sites" in research.md). Add each
 accepted person and source to `tree.json` as you go, with `confidence` and `basis`.

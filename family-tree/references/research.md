@@ -30,6 +30,7 @@ how wrong trees are built.
 | Find a Grave | Web search `site:findagrave.com "First Last" <county or state>`, then fetch the memorial page | Exact dates, burial place, photos of headstones, **family links** to parents and spouse memorials. Volunteer-compiled: the headstone photo is evidence, the bio is a lead. |
 | FamilySearch public pages | Web search; open only pages that don't require sign-in | Indexed vital records and the occasional public tree person. Most of FamilySearch needs a login, so skip it unless the page opens. |
 | Chronicling America (Library of Congress newspapers, about 1770–1963) | `scripts/loc.py search "First Last" --state <state> [--county <county>] --from YYYY --to YYYY` | Death and marriage notices, local "personals" columns, court and estate notices, veterans' lists. Prints the OCR lines around each hit. Coverage differs by state and paper, so an empty result means "not in the digitized papers", not "no notice". |
+| National Archives (NARA) | In Chrome, no login: AAD and the Catalog (see below) | WWII Army enlistments (birth year, county, enlistment date, occupation, marital status); Civil War service records, Union and Confederate, and pension index cards. |
 | State and county archives, Internet Archive (county histories, city directories) | Web search or fetch | Older generations (pre-1930): county histories often contain family sketches. |
 | Local files | `mdfind -name .ged` and `mdfind -name people.json` (shoebox keeps one in `<out>/.shoebox/`) | An existing GEDCOM, or shoebox's flattened tree. Ask before using one that isn't obviously the user's family. |
 
@@ -53,6 +54,37 @@ registers, county maps), not records; the records are in Chronicling America.
 - LOC rate-limits searches and page reads hard. Too many requests in a row brings a
   Cloudflare challenge that lasts up to an hour. `loc.py` spaces its requests, so run
   searches one after another, never in parallel. If a 429 persists, stop and say so.
+
+### Using the National Archives
+
+`archives.gov/research/genealogy` itself is guides. Its census, immigration and
+naturalization records are mostly searched through FamilySearch or Ancestry. Two of its
+own tools are worth a pass. Both refuse plain `curl` (AAD returns 403, the Catalog
+returns an empty app shell) but open without a login in a Chrome tab.
+
+- **AAD, WWII Army Enlistment Records** (`aad.archives.gov/aad/fielded-search.jsp?dt=893&tf=F&cat=all&bc=sl`).
+  About 9 million Army enlistments, 1938–46. That's not every soldier, and there's no Navy or Marines. Fill
+  the NAME field (`SURNAME GIVEN`) and YEAR OF BIRTH (two digits) and submit the form in
+  the page. The free-text box matches any word and floods with namesakes. Names are
+  stored as `SURNAME#GIVEN#INITIAL`. Many 1942 residence fields read "Undefined Code",
+  but the county code is often still the county's FIPS number. Cite the record page as
+  `record-detail.jsp?dt=893&rid=<rid>`, which is stable. One record gives name, birth year and state,
+  and usually a residence county, so apply the two-point rule. The county and a known
+  middle initial are what settle it.
+- **National Archives Catalog** (`catalog.archives.gov/search?q="Surname, Given"&availableOnline=true`).
+  Civil War compiled service records are digitized and searchable by name. Confederate
+  records are titled `<State> - <Unit> - Compiled Service Record of Surname, Given`, with the age at
+  enlistment. Union records are titled `Surname, Given - Age N, Year: YYYY - <Unit>`. Pension index cards are in RG 15. Each
+  record's `catalog.archives.gov/id/<NAID>` page lists its card images. From a Catalog tab,
+  `fetch('/proxy/records/search?naId_is=<NAID>')` returns JSON whose
+  `digitalObjects[].objectUrl` images download with `curl`. The search endpoint
+  answers a few times in a row, then returns the app shell, so read the results page instead.
+  Cards aren't in date order: read them all. The quickest exclusion is a muster roll
+  showing the man alive after your ancestor's death. Enlistment place matters too,
+  because regiments were raised locally.
+- The 1950 census site has an open JSON search
+  (`1950census.archives.gov/api/search?name=&state=&county=`), but its name matching is
+  loose. FamilySearch's 1950 index is easier to use.
 
 ### Signed-in sites
 
