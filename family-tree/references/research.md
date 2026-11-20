@@ -82,6 +82,22 @@ returns an empty app shell) but open without a login in a Chrome tab.
   Cards aren't in date order: read them all. The quickest exclusion is a muster roll
   showing the man alive after your ancestor's death. Enlistment place matters too,
   because regiments were raised locally.
+- **Pension index cards** (RG 15, titled `Pension File Number N`) come up in the same
+  name search. One card can list several unrelated pensioners, so check the card image for
+  your name and unit. A widow's application (WO) or certificate (WC) shows the soldier
+  died before she applied. Application numbers rose over time, so a low one dates the
+  claim roughly. The pension file itself isn't online. Note it as a lead, because it usually
+  gives the death date and the widow's name.
+- **WWII draft cards** are series named `Draft Registration Cards for <State>, October 16,
+  1940–March 31, 1947`, covering men born 1896–1929. The 1942 cards for older men are a
+  separate series. Open the series page first, because many say "Not yet available online"
+  (Tennessee and South Carolina did in 2026), while others are partly scanned. Scanned
+  file units are alphabetical ranges of about 2,000 images, such as `Arvin, Vernie - Asher,
+  Theodore`, with no transcription. Cards run by surname, then given name, front and
+  back alternating. Find a man by checking a few images, cutting the range in half each
+  time: get the image URLs from the file unit's
+  `digitalObjects`, download them with `curl`, and convert the TIFFs with `sips -s format jpeg`.
+  Cite the file unit's `/id/<NAID>` page plus the image number.
 - The 1950 census site has an open JSON search
   (`1950census.archives.gov/api/search?name=&state=&county=`), but its name matching is
   loose. FamilySearch's 1950 index is easier to use.
