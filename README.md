@@ -69,7 +69,7 @@ Each skill lists its own setup in its `SKILL.md`. In short:
   Flipp's weekly-ad search, so no account or API key is needed. Pushing to Reminders needs
   the one-time macOS Automation permission.
 - **osint**: Python 3 (standard library only), no account or API key. Optional keys add
-  coverage: `ABUSEIPDB_KEY`, `GREYNOISE_KEY`, `VT_KEY` (IPs) and `HIBP_KEY` (email breaches).
+  coverage: `ABUSEIPDB_KEY`, `GREYNOISE_KEY`, `VT_KEY`, `IPINFO_TOKEN` (IPs) and `HIBP_KEY` (email breaches).
   See [`osint/README.md`](osint/README.md) for where to get each key and which services
   are worth adding.
   The report stops at online attribution and leaves out home addresses, phone numbers and relatives.

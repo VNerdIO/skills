@@ -16,7 +16,15 @@ it under subpoena or court order. State that limit in the report instead of gues
   runs it.
 - **`ipinfo`**: ASN and org, plus city-level geolocation. Geolocation is approximate
   (often the ISP's regional hub) and wrong for VPNs and mobile carriers. Report it as
-  "routes via", never "located at".
+  "routes via", never "located at". With `IPINFO_TOKEN` set, `authenticated` is true.
+  On a free token the fields are the same as without one, with higher rate limits.
+  Paid plans add `privacy` (`vpn`, `proxy`, `tor`, `relay`, `hosting`, and `service`,
+  which names the VPN provider), `asn.type` (`isp`, `hosting`, `business`,
+  `education`), `company` (the organisation using the range, which can be more
+  specific than the ASN) and `abuse`. `network_kind_guess` uses these flags when they
+  are present and marks its answer "(IPinfo)". Without them, it falls back to keyword
+  hints and marks the answer "(likely)". An `error` value usually means a bad token
+  or an exhausted quota.
 - **`shodan_internetdb`**: open ports, hostnames, CPEs and known CVEs from Shodan's
   last scan. Hostnames here often reveal the domain served from the IP, which you can
   pivot on.

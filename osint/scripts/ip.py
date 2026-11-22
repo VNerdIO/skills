@@ -7,7 +7,9 @@ Usage:
 Prints JSON: RDAP registration (owner org, netblock, abuse contact), reverse DNS,
 ASN/geolocation, open ports and tags from Shodan InternetDB, Tor exit status and a
 hosting/residential guess. Optional keys raise coverage when set in the environment:
-ABUSEIPDB_KEY, GREYNOISE_KEY (community), VT_KEY (VirusTotal).
+ABUSEIPDB_KEY, GREYNOISE_KEY (community), VT_KEY (VirusTotal), IPINFO_TOKEN (higher
+rate limits; paid IPinfo plans add VPN/proxy/hosting flags, ASN type, company and abuse
+contact, which then drive network_kind_guess).
 """
 import ipaddress
 import os
@@ -66,9 +68,23 @@ def main(ip):
     rev = addr.reverse_pointer
     result = {"ip": ip, "version": addr.version, "reverse_dns": dns(rev, "PTR"), "rdap": rdap(ip)}
 
-    _, info = fetch_json(f"https://ipinfo.io/{ip}/json")
-    result["ipinfo"] = {k: info.get(k) for k in ("hostname", "city", "region", "country", "loc",
-                                                  "org", "postal", "timezone", "anycast")} if info else None
+    token = os.environ.get("IPINFO_TOKEN")
+    status, info = fetch_json(f"https://ipinfo.io/{ip}/json",
+                              headers={"Authorization": f"Bearer {token}"} if token else {})
+    if info and "error" in info:
+        err = info["error"]
+        err = err.get("title") or err.get("message") if isinstance(err, dict) else err
+        result["ipinfo"] = {"error": f"HTTP {status}: {err}"}
+        info = None
+    elif info:
+        # Free/unauthenticated responses carry only the first group; paid plans add the
+        # nested privacy, asn, company and abuse objects. Missing keys are left out.
+        keep = ("hostname", "city", "region", "country", "loc", "org", "postal", "timezone",
+                "anycast", "privacy", "asn", "company", "abuse", "domains")
+        result["ipinfo"] = {k: info[k] for k in keep if k in info}
+        result["ipinfo"]["authenticated"] = bool(token)
+    else:
+        result["ipinfo"] = None
 
     _, sh = fetch_json(f"https://internetdb.shodan.io/{ip}")
     result["shodan_internetdb"] = sh if sh and "detail" not in sh else None
@@ -92,9 +108,20 @@ def main(ip):
 
     blob = " ".join(str(x) for x in (result["reverse_dns"], (info or {}).get("org"),
                                      result["rdap"].get("name"), result["rdap"].get("entities"))).lower()
+    privacy = (info or {}).get("privacy") or {}
+    asn_type = ((info or {}).get("asn") or {}).get("type")
     kind = "unknown"
-    if result["tor_exit"]:
+    if result["tor_exit"] or privacy.get("tor"):
         kind = "tor-exit"
+    elif privacy.get("vpn") or privacy.get("proxy") or privacy.get("relay"):
+        service = privacy.get("service")
+        kind = f"vpn-or-proxy (IPinfo{': ' + service if service else ''})"
+    elif privacy.get("hosting") or asn_type == "hosting":
+        kind = "hosting/cloud (IPinfo)"
+    elif asn_type == "isp":
+        kind = "residential/mobile ISP (IPinfo)"
+    elif asn_type in ("business", "education", "government"):
+        kind = f"{asn_type} network (IPinfo)"
     elif any(h in blob for h in VPN_HINTS):
         kind = "vpn-or-proxy (likely)"
     elif any(h in blob for h in HOSTING_HINTS):
