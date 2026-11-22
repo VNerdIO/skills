@@ -120,3 +120,6 @@ dist/
 build/
 *.skill
 *.zip
+
+# osint reports (can hold personal data)
+osint-*.md

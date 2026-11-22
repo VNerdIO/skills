@@ -12,6 +12,7 @@ to any one project.
 | [`shoebox`](shoebox/) | Turns Epson FastFoto scans of old family photos into a labeled library. Transcribes handwriting from photo backs, writes EXIF/XMP dates, places and captions, fixes orientation, and tags people using face clustering and optional GEDCOM family trees. |
 | [`family-tree`](family-tree/) | Builds a four-generation family tree as a GEDCOM 5.5.1 file plus an offline, single-page pedigree chart. Reads existing GEDCOM files, or interviews you and researches deceased ancestors in WikiTree, obituaries and Find a Grave, citing every fact. |
 | [`grocery-list`](grocery-list/) | Sorts a grocery list by aisle in walking order for Publix or Food City, notes this week's weekly-ad specials next to matching items, and pushes the list into Apple Reminders. |
+| [`osint`](osint/) | Works out who is behind an IP address, username or email from free public sources (RDAP, Shodan InternetDB, WhatsMyName's ~700 sites, GitHub, Gravatar, PGP keyservers, Google dorks) and writes a cited report that grades every claim confirmed, likely or possible. |
 | [`zscaler-troubleshooter`](zscaler-troubleshooter/) | Diagnoses Zscaler problems (ZPA private app access, ZIA web/SSL blocks, Client Connector tunnel and auth issues) with read-only API and endpoint checks, then names the likely cause and the fix. |
 
 ## Layout
@@ -38,6 +39,7 @@ Link (or copy) a skill folder into your personal skills directory:
 mkdir -p ~/.claude/skills
 ln -s "$PWD/family-tree" ~/.claude/skills/family-tree
 ln -s "$PWD/grocery-list" ~/.claude/skills/grocery-list
+ln -s "$PWD/osint" ~/.claude/skills/osint
 ln -s "$PWD/shoebox" ~/.claude/skills/shoebox
 ln -s "$PWD/zscaler-troubleshooter" ~/.claude/skills/zscaler-troubleshooter
 ```
@@ -66,6 +68,11 @@ Each skill lists its own setup in its `SKILL.md`. In short:
 - **grocery-list**: macOS with Python 3 (standard library only). Specials come from
   Flipp's weekly-ad search, so no account or API key is needed. Pushing to Reminders needs
   the one-time macOS Automation permission.
+- **osint**: Python 3 (standard library only), no account or API key. Optional keys add
+  coverage: `ABUSEIPDB_KEY`, `GREYNOISE_KEY`, `VT_KEY` (IPs) and `HIBP_KEY` (email breaches).
+  See [`osint/README.md`](osint/README.md) for where to get each key and which services
+  are worth adding.
+  The report stops at online attribution and leaves out home addresses, phone numbers and relatives.
 - **shoebox**: macOS or Linux with `exiftool` (`brew install exiftool`) and Python 3.11–3.13
   (`uv` recommended). `scripts/setup.sh` creates a virtualenv at
   `~/.local/share/shoebox/venv`. Face matching uses `face_recognition` (dlib), which is
