@@ -4,7 +4,9 @@
 
 - **`domain.kind`**:
   - `organisation/custom`: the domain itself is strong attribution. The website title,
-    RDAP registration date and MX host say who runs it. A domain registered days ago
+    RDAP registration date and MX host say who runs it. Run
+    `domain.py` on the domain for the full picture (certificates, tracking IDs,
+    archived pages), and pivot on what it finds. A domain registered days ago
     that imitates a brand is a phishing indicator. Say so.
   - `free-webmail`: the domain says nothing. Attribution rests on the local part and
     what the address is attached to.
@@ -48,4 +50,4 @@ When the email came in a message, ask for the full headers (in Gmail: ⋮ → Sh
 original). Read `Return-Path`, `Reply-To` (often the scammer's real inbox, which
 differs from `From`), the `Authentication-Results` SPF/DKIM/DMARC verdicts and the
 first external `Received` IP. Run `ip.py` on that IP and `mail.py` on the `Reply-To`
-address. Links in the body are domains to pivot on with RDAP and VirusTotal.
+address. Links in the body are domains to pivot on with `domain.py`.

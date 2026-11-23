@@ -44,7 +44,7 @@ def dns(name, rtype):
     return [a["data"] for a in (j or {}).get("Answer", []) if a.get("type") in RTYPES.get(rtype, ())]
 
 
-RTYPES = {"A": (1,), "MX": (15,), "TXT": (16,), "PTR": (12,), "NS": (2,), "CNAME": (5,)}
+RTYPES = {"A": (1,), "AAAA": (28,), "MX": (15,), "TXT": (16,), "PTR": (12,), "NS": (2,), "CNAME": (5,)}
 
 
 def dump(obj):

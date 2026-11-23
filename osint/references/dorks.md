@@ -28,6 +28,17 @@ site:<domain> "<local>"                    # org domains: staff pages, papers, p
 "@<domain>" -site:<domain>                 # who else uses a small custom domain
 ```
 
+## Domain
+
+```
+"<domain>" -site:<domain>                  # who links to or talks about it
+site:<domain>                              # every indexed page, including forgotten ones
+site:<domain> (about OR contact OR impressum OR "privacy policy" OR terms)
+site:*.<domain> -www                       # indexed subdomains
+"<domain>" (scam OR phishing OR fraud OR complaint)
+"<tracking or verification ID>"            # other sites run by the same account
+```
+
 ## Username
 
 ```

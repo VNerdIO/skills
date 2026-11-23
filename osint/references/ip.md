@@ -49,7 +49,7 @@ it under subpoena or court order. State that limit in the report instead of gues
 
 Passive DNS and TLS certificates usually advance attribution most for a server IP:
 they turn the IP into domains, and domains have registrants, websites and owners.
-Pivot on those domains with RDAP (`https://rdap.org/domain/<domain>`) and the dorks.
+Pivot on those domains with `domain.py` and the dorks.
 
 ## Where the IP came from
 

@@ -1,11 +1,11 @@
 ---
 name: osint
-description: Attribute an IP address, username or email address to the person or organisation behind it using free public sources (RDAP/WHOIS, Shodan InternetDB, WhatsMyName's ~700 sites, GitHub, Gravatar, PGP keyservers, Google dorks) and write a cited report with a confidence grade for every claim. Use this whenever the user wants to know who is behind an IP, handle or email: a phishing or scam sender, an abusive account, a suspicious login, a contact to verify, or their own footprint, even if they don't say "OSINT".
+description: Attribute an IP address, domain, username or email address to the person or organisation behind it using free public sources (RDAP/WHOIS, DNS, certificate transparency, the Wayback Machine, Shodan InternetDB, WhatsMyName's ~700 sites, GitHub, Gravatar, PGP keyservers, Google dorks) and write a cited report with a confidence grade for every claim. Use this whenever the user wants to know who is behind an IP, website, domain, handle or email: a phishing or scam sender or site, an abusive account, a suspicious login, a contact to verify, or their own footprint, even if they don't say "OSINT".
 ---
 
 # OSINT attribution
 
-Take one **selector** (an IP, username or email) and answer *who controls it* from
+Take one **selector** (an IP, domain, username or email) and answer *who controls it* from
 public sources, with every claim cited and graded. The answer is often an organisation
 or an online persona, not a legal name. Say so plainly rather than stretching the
 evidence.
@@ -34,6 +34,7 @@ the platform's report button, the IP's abuse contact, or the police.
 | Selector | Command | Then read |
 | --- | --- | --- |
 | IPv4/IPv6 | `python3 ip.py 203.0.113.7` | [`references/ip.md`](references/ip.md) |
+| Domain or URL | `python3 domain.py example.com` | [`references/domain.md`](references/domain.md) |
 | Email | `python3 mail.py someone@example.com` | [`references/email.md`](references/email.md) |
 | Username | `python3 username.py handle` then `python3 username.py --profiles handle` | [`references/username.md`](references/username.md) |
 
@@ -52,7 +53,7 @@ selector.
 ## 3. Pivot
 
 Each finding yields new selectors: an email in a GitHub commit, a username in an
-email's local part, a domain from a profile link, a real name on Gravatar. Run step 1
+email's local part, a domain from a profile link, an email or tracking ID on a website, a real name on Gravatar. Run step 1
 on each new selector that is **likely** or better (see grades below). Stop after two
 hops from the original selector, or sooner when new hops add nothing. Track every
 selector and the source that produced it, because the report needs the chain.
@@ -82,12 +83,14 @@ user's chosen folder) with these sections:
 1. **Answer.** One paragraph: who most likely controls the selector, the overall
    confidence, and the single strongest piece of evidence.
 2. **Identity.** A table of claims (name, organisation, location to city level,
-   persona), each with grade and source URL.
+   persona; for a domain, also registrar and registration date), each with grade
+   and source URL.
 3. **Linked selectors.** Accounts, emails and domains, each with grade, source and the
    pivot that found it.
 4. **Unrelated or unverified hits.** Grouped, one line each.
 5. **Limits.** What public sources cannot tell (for example, a residential IP's
-   subscriber is known only to the ISP and is released under legal process), and
+   subscriber is known only to the ISP, and a redacted domain registrant only to the
+   registrar, both released under legal process), and
    the next step: the abuse contact, a platform report, or a request through
    law enforcement.
 6. **Sources.** Every URL consulted, with access date.
